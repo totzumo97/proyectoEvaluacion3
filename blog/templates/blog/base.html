@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+{% load pwa %}
+{% progressive_web_app_meta %}
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"
+    defer
+    ></script>
+
+    <style type="text/css">
+      /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px;
+        /* The height is 400 pixels */
+        width: 100%;
+        /* The width is the width of the web page */
+    }
+    </style>
+
+    <script>
+      // Initialize and add the map
+    function initMap() {
+        // The location of Uluru
+        const uluru = { lat: -25.344, lng: 131.036 };
+        // The map, centered at Uluru
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: uluru,
+        });
+        // The marker, positioned at Uluru
+        const marker = new google.maps.Marker({
+            position: uluru,
+            map: map,
+        });
+    }
+    </script>
+
+    {% if title %}
+    <title>Mobike Blog - {{ title }}</title>
+    {% else %}
+    <title>Mobike Blog</title>
+    {% endif %}
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="/">Mobike Blog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{% url 'blog-home' %}">Posts</a>
+                        <a class="nav-item nav-link" href="{% url 'blog-about' %}">Sobre nosotros</a>
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        {% if user.is_authenticated %}
+                            {% if user.is_staff or user.is_superuser %}
+                                <a class="nav-item nav-link" target="_blank" href="{% url 'admin:index' %}">Admin</a>
+                            {% endif %}
+                            <a class="nav-item nav-link" href="{% url 'post-create' %}">Agregar Post</a>
+                            <a class="nav-item nav-link" href="{% url 'profile' %}">Perfil</a>
+                            <a class="nav-item nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+                        {% else %}
+                            <a class="nav-item nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                            <a class="nav-item nav-link" href="{% url 'register' %}">Registrarse</a>
+                        {% endif %}
+                        </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+		<div class="container-fluid padding bg-steel">
+			<div class="row text-center">
+				<div class="col-md-4">
+					<hr color="white">
+					<p class="txt-footer">mobike@gmail.com</p>
+					<p class="txt-footer">Padre Alonso de Ovalle 868</p>
+					<p class="txt-footer">Santiago, 8320000</p>
+                    <hr color="white">
+				</div>
+				<div class="col-md-4 hide-header">
+					<hr  color="white">
+					<h5 class="txt-footer">Horario de contacto</h5>
+					<hr color="white">
+					<p class="txt-footer">Lun-Vie: 7am - 11pm</p>
+					<p class="txt-footer">Sabado: 7am - 10pm</p>
+					<p class="txt-footer">Domingo: 7am - 9pm</p>
+				</div>
+				<div class="col-md-4 hide-header">
+					<hr color="white">
+					<button class="btn btn-success" type="submit">Servicio al Cliente</button>
+					<hr class="linea-horizontal" color="white">
+				</div>
+			</div>
+		</div>
+	</footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
